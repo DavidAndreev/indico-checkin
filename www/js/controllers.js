@@ -17,13 +17,6 @@
 
 function NavigationController($scope, $location, OAuth) {
 
-    testJson =  {"$ed":"2017-07-26T14:00","$fn":"David","$gn":"Sub text event","$id":"in630498","$ln":"Andreev","$rc":"IL2A9EN","$sd":"2017-07-26T12:00","checkin_secret":"1d6f96ed-6f85-40ab-b6ec-c5e3c47c936d","event_id":"650491","registrant_id":630498,"server_url":"https://inception.cern.ch"};
-    addEventProduction = {"date":"14 Aug 2017","event_id":659824,"server":{"auth_url":"https://indico.cern.ch/oauth/authorize","baseUrl":"https://indico.cern.ch","consumerKey":"00000000-dead-c0de-beef-000000001111","token_url":"https://indico.cern.ch/oauth/token"},"title":"Test conf"};
-    // checkinPorduc
-    function myResult() {
-        return null;
-    }
-
     function scanQRCode(callback) {
         cordova.plugins.barcodeScanner.scan(
             function (result) {
@@ -33,8 +26,7 @@ function NavigationController($scope, $location, OAuth) {
                 }
             },
             function (error) {
-                showAlert("Error scanning", error, function () {});
-                callback(JSON.parse(addEventProduction));
+                showAlert("MY Error scanning", error, function () {});
             }
         );
     }
@@ -49,7 +41,6 @@ function NavigationController($scope, $location, OAuth) {
                 showAlert('No event', "There is no event in the list for this registrant", function () {});
                 $location.path('events');
             } else {
-                showAlert('No event', "CASE 2", function () {});
                 $location.path('registrant').search({"registrant_id": data.registrant_id,
                                                  "event_id": data.event_id,
                                                  "server_id": data.server_url.hashCode(),
@@ -62,7 +53,7 @@ function NavigationController($scope, $location, OAuth) {
 
     $scope.addEvent = function () {
         scanQRCode(function (data) {
-            if(OAuth.getEvent(data.server.baseUrl.hashCode(), data.event_id)) {
+            if(OAuth.getEvent(data.server.base_url.hashCode(), data.event_id)) {
                 showAlert('Already added', "This event has been already added to the system", function () {});
                 $location.path('events');
                 $scope.$apply();
